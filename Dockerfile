@@ -34,13 +34,19 @@ FROM python:${PYTHON_VERSION}-${PYTHON_DISTRO} AS run-stage
 ARG USER
 ENV USER=${USER}
 
+COPY entrypoint /entrypoint
+
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/* \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
     && addgroup ${USER} \
-    && useradd -m -g ${USER} ${USER}
+    && useradd -m -g ${USER} ${USER} \
+    && chmod +x /entrypoint \
+    && sed -i 's/\r$//' /entrypoint \
+    && chown -R ${USER}:${USER} /entrypoint
+
 
 # Copy upgraded pip from build stage
 COPY --from=build-stage /usr/local/bin/pip /usr/local/bin/pip
@@ -55,4 +61,5 @@ WORKDIR /app
 
 COPY ./src /app
 
+ENTRYPOINT [ "/entrypoint" ]
 CMD [ "python", "main.py" ]
