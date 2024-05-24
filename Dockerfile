@@ -1,7 +1,9 @@
 ARG PYTHON_VERSION=3.11
 ARG PYTHON_DISTRO=slim
 ARG USER=imran
-## BUILD STAGE
+
+
+####### BUILD STAGE #######
 
 FROM python:${PYTHON_VERSION}-${PYTHON_DISTRO} AS build-stage
 ARG USER
@@ -29,6 +31,7 @@ RUN python -m pip install --upgrade pip \
     && pip wheel --wheel-dir /wheels \
     -r requirements.txt
 
+####### RUN STAGE #######
 
 FROM python:${PYTHON_VERSION}-${PYTHON_DISTRO} AS run-stage
 ARG USER
