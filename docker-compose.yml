@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  base: #TODO change the name of the service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    image: base #TODO change the name of the image
+    container_name: base #TODO change the name of the container
+    env_file:
+      - ./.env.local/.env.local
+    volumes:
+      - ./src /app
