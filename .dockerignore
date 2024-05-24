@@ -1,0 +1,6 @@
+**/.git
+.git/
+.venv/
+Makefile
+**/__pycache__/
+.env
